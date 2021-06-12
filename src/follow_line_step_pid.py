@@ -60,8 +60,8 @@ class LineFollower(object):
         >>> print( hsv_yellow )
         [[[ 60 255 255]]]
         """
-        lower_yellow = np.array([20,100,100])
-        upper_yellow = np.array([50,255,255])
+        lower_yellow = np.array([0,0,173])
+        upper_yellow = np.array([179,92,255])
 
         # Threshold the HSV image to get only yellow colors
         mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
@@ -70,8 +70,13 @@ class LineFollower(object):
         m = cv2.moments(mask, False)
         try:
             cx, cy = m['m10']/m['m00'], m['m01']/m['m00']
+            rospy.loginfo("cx ==>" + str(cx))
+            rospy.loginfo("cy ==>" + str(cy))
+
         except ZeroDivisionError:
             cy, cx = height/2, width/2
+            rospy.loginfo("cx ==>" + str(cx))
+            rospy.loginfo("cy ==>" + str(cy))
 
 
         # Bitwise-AND mask and original image
@@ -90,7 +95,7 @@ class LineFollower(object):
         
 
         twist_object = Twist()
-        if (cx<=639 and cx>=615):
+        if (cx<=639 and cx>=600):
             twist_object.linear.x = 0.0
             eff=700
         else:
